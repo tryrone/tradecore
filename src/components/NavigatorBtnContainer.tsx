@@ -86,6 +86,7 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
     descriptionIsRequired,
     successScreen,
     setSuccessVisible,
+    setSuccessScreen,
     subFormData,
     setTitleError,
     setLoading,
@@ -119,7 +120,7 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
         (subGenreIsSelectedAndDescriptionIsFalse ||
         subGenreIsSelectedAndDescriptionIsTrue) && !successScreen
       ) {
-         console.log("DEBUGTWO*************");
+        // navigating to the third tab
         const stepsCopy = [...steps];
         stepsCopy.forEach((step: Step) => (step.active = false));
         const filteredOutNullStep = stepsCopy.filter(
@@ -134,13 +135,14 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
         handleStepChange(filteredOutNullStep);
         setActiveStep(StepNumber);
       } else if (addNewBookIsTrueSubgenreFalse) {
-         console.log( "DEBUGTHREE*************");
+        // when you are about to add a new book
         const stepsCopy = [...steps];
         stepsCopy.forEach((step: Step) => (step.active = false));
-        const filteredOutNullStep = stepsCopy.filter((obj) => obj.number !== null);
+        const filteredOutNullStep = stepsCopy.filter(
+          (obj) => obj.number !== null
+        );
 
         if (thirdStepIsAvailable && StepNumber === 4) {
-          console.log('basis***********')
           const objIndex = stepsCopy.findIndex(
             (obj) => obj.number === StepNumber
           );
@@ -148,7 +150,6 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
           handleStepChange(stepsCopy);
           return setActiveStep(StepNumber);
         } else if (!thirdStepIsAvailable && StepNumber === 3) {
-          console.log("camel***********");
           filteredOutNullStep.push({
             name: "Add new subgenre",
             number: 3,
@@ -164,24 +165,19 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
           handleStepChange(filteredOutNullStep);
           setActiveStep(StepNumber);
         } else if (steps.length === 4 && !successScreen) {
-          console.log('i f so you should pay me');
-          // if(!subFormData?.bookTitle){
-          //   setTitleError(true);
-          // }else{
-          //   setLoading(true);
-          //   setTimeout(()=>{
-          //     setLoading(false);
-          //     console.log({ subFormData });
-          //     setActiveStep(1);
-          //     return setSuccessVisible(true);
-          //   },4000);
-          // }
-          
+          if (!subFormData?.bookTitle) {
+            setTitleError(true);
+          } else {
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              console.log({ subFormData });
+              setActiveStep(1);
+              return setSuccessVisible(true);
+            }, 4000);
+          }
         }
-
-        
       } else {
-        console.log('DEBUGONE*************')
         if (steps.length === 3 && successScreen) {
           setLoading(true);
           setTimeout(() => {
@@ -213,6 +209,7 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
       steps[objIndex].active = true;
       handleStepChange(stepsCopy);
       setActiveStep(StepNumber);
+      setSuccessScreen(false);
     }else if( StepNumber === 2 && steps.length === 3){
       stepsCopy.pop();
       stepsCopy.push({
@@ -221,6 +218,7 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
         active: false,
         indicatorTo: false,
       });
+      setSuccessScreen(false);
     }else if (StepNumber === 2 && steps.length === 4){
       stepsCopy.pop();
       stepsCopy.pop();
@@ -235,6 +233,7 @@ const NavigatorBtnContainer = ({ setActiveStep, activeStep }: any) => {
     const objIndex = stepsCopy.findIndex((obj) => obj.number === StepNumber);
     steps[objIndex].active = true;
     handleStepChange(stepsCopy);
+    setSuccessScreen(false);
     setActiveStep(StepNumber);
   };
 
