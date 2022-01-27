@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Colors from '../Colors';
 import { BookContext } from "../context/BookContext";
 import { Step } from '../Types/stepType';
+import useWindowDimensions from '../utils';
 
 const PageHeader = styled.p`
     font-size:16px;
@@ -37,7 +38,6 @@ const StepWrap = styled.div<{active:boolean}>`
     display:flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 `;
 
 const StepText = styled.div<{ active: boolean }>`
@@ -59,49 +59,49 @@ const StepIndicator = styled.div`
   }
 `;
 
-const StepName = styled.p<{ active: boolean }>`
+const StepName = styled.p<{ active: boolean; width?:string}>`
   position: absolute;
   bottom: -40px;
   font-size: 14px;
   font-weight: 600;
+  text-align:center;
+  width: ${({width}) => width?.length !== 0 ? width : 'auto'};
   color: ${({ active }) => (active ? Colors.main.inactive_black : Colors.main.black_01)};
 `;
 
 const StepsContainer = () => {
-  const { steps, handleStepChange } = useContext(BookContext);
-
-  const onPress = (stepObj:Step) =>{
-    if(stepObj.name === null) return;
-    const stepsCopy = [...steps];
-    stepsCopy.forEach((step: Step) => (step.active = false));
-     const objIndex = stepsCopy.findIndex((obj) => obj.number === stepObj.number);
-     steps[objIndex].active = true;
-     handleStepChange(stepsCopy);
-  }
-  
+  const { steps } = useContext(BookContext);
+  const { width } = useWindowDimensions();
+  const textWidth = width <= 728 ? "auto" : "280%";
 
   return (
     <Fragment>
       <PageHeader>Add book - New book</PageHeader>
-
       <Row>
         {
           steps.map((step:Step,index)=>{
             return (
               <Fragment key={index + "step"}>
-                <Column onClick={() => onPress(step)}>
+                <Column>
                   <StepWrap active={step.active}>
                     <StepText active={step.active}>
                       {step?.number || "..."}
                     </StepText>
                   </StepWrap>
                   {step?.name && (
-                    <StepName active={step.active}>{step.name}</StepName>
+                    <StepName
+                      width={
+                        step.number === 3 ? textWidth : ""
+                      }
+                      active={step.active}
+                    >
+                      {step.name}
+                    </StepName>
                   )}
                 </Column>
                 {step.indicatorTo && <StepIndicator />}
               </Fragment>
-            );
+            ); 
           })
         }
       </Row>

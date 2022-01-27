@@ -56,8 +56,6 @@ const Genres = () => {
 
     const { width } = useWindowDimensions();
     const { 
-      // steps, 
-      // handleStepChange, 
       setActiveGenre, 
       activeGenre 
     } = useContext(BookContext);

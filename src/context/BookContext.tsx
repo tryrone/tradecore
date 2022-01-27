@@ -1,5 +1,4 @@
 import React,{useState} from 'react';
-import { GenreObj, SubGenre } from '../Types/genreTypes';
 import { Step } from '../Types/stepType';
 
 export const BookContext = React.createContext<any>({});
@@ -16,7 +15,7 @@ export const BookProvider = ({children}) => {
         name: "Subgenre",
         number: 2,
         active: false,
-        indicatorTo: true,
+        indicatorTo: true, 
       },
       {
         name: null,
@@ -25,22 +24,63 @@ export const BookProvider = ({children}) => {
         indicatorTo: false,
       },
     ]);
-    const [activeGenre, setActiveGenre] = useState<GenreObj[]>([]);
-    const [activeSubGenre, setActiveSubGenre] = useState<SubGenre>();
+    const [activeGenre, setActiveGenre] = useState({});
+    const [addNewBook, setAddNewBook] = useState(false);
+    const [successScreen, setSuccessScreen] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [descriptionIsRequired, setDescriptionIsRequired] = useState(false);
+    const [activeSubGenre, setActiveSubGenre] = useState({});
+    const [titleError, setTitleError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [subFormData, setSubFormData] = useState({
+      bookTitle: "",
+      author: "",
+      isbn: "",
+      publisher: "",
+      date: "",
+      noOfPages: "",
+      format: "",
+      edition: "",
+      editionLanguage: "",
+      description: "",
+    });
 
     const handleStepChange = (step: [Step]) => {
       setSteps(step);
+    };
+
+    const handleTextChange = (e, name) => {
+      setSubFormData({ ...subFormData, [name]: e.target.value });
+    };
+    const handleDropdownChange = (val, name) => {
+      setSubFormData((prevState) => ({ ...prevState, [name]: val }));
     };
 
   return (
     <BookContext.Provider
       value={{
         steps,
+        setSteps,
         handleStepChange,
         activeGenre,
         setActiveGenre,
         activeSubGenre,
         setActiveSubGenre,
+        addNewBook,
+        setAddNewBook,
+        descriptionIsRequired,
+        setDescriptionIsRequired,
+        successScreen,
+        setSuccessScreen,
+        successVisible,
+        setSuccessVisible,
+        subFormData,
+        handleTextChange,
+        handleDropdownChange,
+        setTitleError,
+        titleError,
+        setLoading,
+        loading,
       }}
     >
       {children}
